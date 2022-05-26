@@ -1,0 +1,25 @@
+<div *ngIf="detailData">
+  <h3>タイトル：{{ detailData.title }}</h3>
+  <h3>説明：{{ detailData.content }}</h3>
+  <h3>データ登録日時：{{ detailData.created_at | slice: 0:16 }}</h3>
+  <h3>データ更新日時：{{ detailData.updated_at | slice: 0:16 }}</h3>
+  <form #data="ngForm" (ngSubmit)="updateData(data.value)">
+    <label for="name">編集</label><br />
+    タイトル：<input
+      type="text"
+      name="title"
+      [(ngModel)]="detailData.title"
+    /><br />
+    説明：<textarea
+      type="text"
+      name="content"
+      [(ngModel)]="detailData.content"
+    ></textarea
+    ><br />
+    <button type="submit">編集を保存</button>
+  </form>
+
+  <input type="button" id="delete" value="削除" (click)="deleteData()" />
+
+  <button (click)="backBtnClick()" type="button">戻る</button>
+</div>
