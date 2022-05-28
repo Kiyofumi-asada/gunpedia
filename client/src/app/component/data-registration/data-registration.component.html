@@ -1,8 +1,18 @@
 <form #data="ngForm" (ngSubmit)="onSubmit(data.value)">
-  text:
+  タイトル:
   <input type="text" name="title" ngModel /><br />
-  content:
+  内容:
   <textarea type="text" name="content" ngModel></textarea><br />
-  <button type="submit">Submit</button>
+  <div class="upload">
+    <input
+      type="file"
+      name="image"
+      accept="image/*"
+      (change)="onChangeFileInput($event)"
+      ngModel
+    />
+    <img [src]="img2base64" alt="" />
+  </div>
+  <button type="submit" style="margin: 3px">データを登録</button>
+  <button (click)="backBtnClick()" type="button">戻る</button>
 </form>
-<button (click)="backBtnClick()" type="button">戻る</button>

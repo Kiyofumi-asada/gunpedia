@@ -10,6 +10,7 @@ import { TFormData } from 'src/app/types/types';
   styleUrls: ['./data-registration.component.scss'],
 })
 export class DataRegistrationComponent implements OnInit {
+  img2base64 = '';
   constructor(
     private listService: ListService,
     private location: Location,
@@ -22,7 +23,21 @@ export class DataRegistrationComponent implements OnInit {
     this.location.back();
   }
 
+  onChangeFileInput(event: any) {
+    let file = null;
+    let reader = new FileReader();
+    if (event.target.files.length === 0) {
+      return;
+    }
+    file = event.target.files[0];
+    reader.onload = () => {
+      this.img2base64 = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
   onSubmit(data: TFormData): void {
+    data.image = data.image?.length ? this.img2base64 : null;
     const body = JSON.stringify(data);
     this.listService.registerData(body).subscribe(
       () => {

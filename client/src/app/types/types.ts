@@ -12,4 +12,5 @@ export type TPartialGundamData = Partial<TGundamData>;
 export type TFormData = {
   title: string;
   content: string;
+  image: string | null;
 };
