@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListService } from 'src/app/service/list.service';
+import { AjaxService } from 'src/app/service/ajax.service';
 import { Location } from '@angular/common';
 import { HotToastService } from '@ngneat/hot-toast';
 import { environment } from 'src/environments/environment';
@@ -24,7 +24,7 @@ export class ListDetailComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private listService: ListService,
+    private ajaxService: AjaxService,
     private location: Location,
     private toastService: HotToastService
   ) {}
@@ -34,7 +34,7 @@ export class ListDetailComponent implements OnInit {
   }
 
   getDetailData() {
-    this.listService
+    this.ajaxService
       .getDetailData(this.detailId)
       .then((res: any) => {
         this.detailData = this.isLocal ? res.body.detailData : res.body;
@@ -79,7 +79,7 @@ export class ListDetailComponent implements OnInit {
       data.image = null;
     }
     const body = { ...data, id: this.detailId, image: data.image };
-    this.listService.updateData(body).subscribe(
+    this.ajaxService.updateData(body).subscribe(
       () => {
         this.toastService.success('データ更新しました');
       },
@@ -90,7 +90,7 @@ export class ListDetailComponent implements OnInit {
   }
 
   deleteData() {
-    this.listService.deleteData(this.detailId).subscribe(
+    this.ajaxService.deleteData(this.detailId).subscribe(
       (res) => {
         this.toastService.success('データ削除しました');
         this.backBtnClick();

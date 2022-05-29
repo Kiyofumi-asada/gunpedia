@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { TPartialGundamData } from '../types/types';
 
 @Injectable()
-export class ListService {
+export class AjaxService {
   private _httpOptions: any = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export class ListService {
    * @param body
    * @returns
    */
-  registerData(body: TPartialGundamData): Observable<any> {
+  registerData(body: TPartialGundamData): Observable<ArrayBuffer> {
     return this.http.post(this.apiUrl, body, this._httpOptions);
   }
 
@@ -86,7 +86,7 @@ export class ListService {
    * @param body
    * @returns
    */
-  updateData(body: TPartialGundamData): Observable<any> {
+  updateData(body: TPartialGundamData): Observable<ArrayBuffer> {
     return this.http.put(this.apiUrl, body, this._httpOptions);
   }
   /**
@@ -94,7 +94,7 @@ export class ListService {
    * @param detailId
    * @returns
    */
-  deleteData(detailId: number): Observable<any> {
+  deleteData(detailId: number): Observable<TPartialGundamData> {
     return this.http.request('DELETE', this.apiUrl, { body: { id: detailId } });
   }
 }

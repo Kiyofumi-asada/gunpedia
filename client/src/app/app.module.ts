@@ -10,7 +10,7 @@ import { ListComponent } from './component/list/list.component';
 import { ListDetailComponent } from './component/list-detail/list-detail.component';
 import { DataRegistrationComponent } from './component/data-registration/data-registration.component';
 //Service
-import { ListService } from './service/list.service';
+import { AjaxService } from './service/ajax.service';
 import { HotToastModule } from '@ngneat/hot-toast';
 
 @NgModule({
@@ -27,7 +27,7 @@ import { HotToastModule } from '@ngneat/hot-toast';
     AppRoutingModule,
     HotToastModule.forRoot(),
   ],
-  providers: [ListService],
+  providers: [AjaxService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

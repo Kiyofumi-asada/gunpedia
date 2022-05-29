@@ -1,5 +1,9 @@
 <a routerLink="/register">
-  <input type="button" value="データ追加" (click)="onClickRegister($event)" />
+  <input
+    type="button"
+    value="新規データを追加する"
+    (click)="onClickRegister($event)"
+  />
 </a>
 <table class="table">
   <tr *ngFor="let data of dataList">

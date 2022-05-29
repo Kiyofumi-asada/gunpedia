@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ListService } from 'src/app/service/list.service';
+import { AjaxService } from 'src/app/service/ajax.service';
 import { TPartialGundamData } from 'src/app/types/types';
 import { environment } from 'src/environments/environment';
 
@@ -16,10 +16,10 @@ export class ListComponent implements OnInit {
   dataList: Array<TPartialGundamData> = Array(this.data);
   isLocal = environment.local;
 
-  constructor(private listService: ListService) {}
+  constructor(private ajaxService: AjaxService) {}
 
   ngOnInit() {
-    this.listService
+    this.ajaxService
       .getList()
       .then((res: any) => {
         this.dataList = this.isLocal ? res.body.data : res.body;

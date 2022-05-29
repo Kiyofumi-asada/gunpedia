@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ListService } from 'src/app/service/list.service';
+import { AjaxService } from 'src/app/service/ajax.service';
 import { HotToastService } from '@ngneat/hot-toast';
 import { TPartialGundamData } from 'src/app/types/types';
 
@@ -10,9 +10,10 @@ import { TPartialGundamData } from 'src/app/types/types';
   styleUrls: ['./data-registration.component.scss'],
 })
 export class DataRegistrationComponent implements OnInit {
-  img2base64 = '';
+  img2base64: string = '';
+
   constructor(
-    private listService: ListService,
+    private ajaxService: AjaxService,
     private location: Location,
     private toastService: HotToastService
   ) {}
@@ -39,7 +40,7 @@ export class DataRegistrationComponent implements OnInit {
   onSubmit(data: TPartialGundamData): void {
     data.image = data.image?.length ? this.img2base64 : null;
     const body = JSON.stringify(data);
-    this.listService.registerData(body as any).subscribe(
+    this.ajaxService.registerData(body as TPartialGundamData).subscribe(
       () => {
         this.toastService.success('データを登録しました');
         this.backBtnClick();
