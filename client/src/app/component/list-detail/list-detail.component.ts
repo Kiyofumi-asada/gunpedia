@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ListService } from 'src/app/service/list.service';
 import { Location } from '@angular/common';
 import { HotToastService } from '@ngneat/hot-toast';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-list-detail',
@@ -11,8 +12,9 @@ import { HotToastService } from '@ngneat/hot-toast';
 })
 export class ListDetailComponent implements OnInit {
   detailData: any;
-  isLocal = false;
+  isLocal = environment.local;
   detailId = Number(this.route.snapshot.paramMap.get('id'));
+  img2base64 = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -29,13 +31,27 @@ export class ListDetailComponent implements OnInit {
     this.listService
       .getDetailData(this.detailId)
       .then((res: any) => {
-        this.detailData = this.isLocal ? res.body.resData : res.body;
+        console.log(res.body.detailData);
+        this.detailData = this.isLocal ? res.body.detailData : res.body;
       })
       .catch((err) => this.toastService.error(err));
   }
 
+  onChangeFileInput(event: any) {
+    let file = null;
+    let reader = new FileReader();
+    if (event.target.files.length === 0) {
+      return;
+    }
+    file = event.target.files[0];
+    reader.onload = () => {
+      this.img2base64 = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
   updateData(data: any) {
-    const body = { id: this.detailId, ...data };
+    const body = { ...data, id: this.detailId };
     this.listService.updateData(body).subscribe(
       () => {
         this.toastService.success('データ更新しました');

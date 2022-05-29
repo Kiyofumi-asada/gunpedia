@@ -1,25 +1,29 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
+import { TPartialGundamData } from '../types/types';
 
 @Injectable()
 export class ListService {
-  private httpOptions: any = {
+  private _httpOptions: any = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json',
     }),
     observe: 'response',
     body: null,
   };
-  isLocal = false;
-  host: string = this.isLocal
-    ? 'http://localhost:4200/app'
-    : 'http://ec2-13-114-147-158.ap-northeast-1.compute.amazonaws.com';
-  path: string = '/api/index';
-  reqUrl: string = this.host + this.path;
+  isLocal = environment.local;
+  host: string = environment.host;
+  apiPath = {
+    org: '/api/index',
+  } as const;
+  apiUrl: string = `${this.host}${this.apiPath.org}`;
 
   constructor(private http: HttpClient) {
     this.setAuthorization('my-auth-token');
+    console.log('###isLocal', this.isLocal);
+    console.log('###host', this.host);
   }
 
   setAuthorization(token: string = ''): void {
@@ -27,7 +31,7 @@ export class ListService {
       return;
     }
     const bearerToken: string = `Bearer ${token}`;
-    this.httpOptions.headers = this.httpOptions.headers.set(
+    this._httpOptions.headers = this._httpOptions.headers.set(
       'Authorization',
       bearerToken
     );
@@ -37,9 +41,9 @@ export class ListService {
    * 一覧取得
    * @returns
    */
-  public getList(): Promise<any[]> {
+  public getList(): Promise<TPartialGundamData[]> {
     return this.http
-      .get(this.reqUrl, this.httpOptions)
+      .get(this.apiUrl, this._httpOptions)
       .toPromise()
       .then((res) => {
         const resData: any = res;
@@ -57,14 +61,14 @@ export class ListService {
    * @param detailId
    * @returns
    */
-  getDetailData(detailId: number): Promise<any> {
-    const detailPath = '/api/index/' + detailId;
-    console.log('path', detailPath);
+  getDetailData(detailId: number): Promise<TPartialGundamData> {
+    const detailPath = `${this.apiUrl}/${detailId}`;
     return this.http
-      .get(this.host + detailPath, this.httpOptions)
+      .get(detailPath, this._httpOptions)
       .toPromise()
       .then((res) => {
         const resData: any = res;
+        console.log('#############', res);
         return resData;
       })
       .catch(this.errorHandler);
@@ -75,8 +79,8 @@ export class ListService {
    * @param body
    * @returns
    */
-  registerData(body: any): Observable<any> {
-    return this.http.post(this.reqUrl, body, this.httpOptions);
+  registerData(body: TPartialGundamData): Observable<any> {
+    return this.http.post(this.apiUrl, body, this._httpOptions);
   }
 
   /**
@@ -84,8 +88,8 @@ export class ListService {
    * @param body
    * @returns
    */
-  updateData(body: any): Observable<any> {
-    return this.http.put(this.reqUrl, body, this.httpOptions);
+  updateData(body: TPartialGundamData): Observable<any> {
+    return this.http.put(this.apiUrl, body, this._httpOptions);
   }
   /**
    * データ削除
@@ -93,6 +97,6 @@ export class ListService {
    * @returns
    */
   deleteData(detailId: number): Observable<any> {
-    return this.http.request('DELETE', this.reqUrl, { body: { id: detailId } });
+    return this.http.request('DELETE', this.apiUrl, { body: { id: detailId } });
   }
 }

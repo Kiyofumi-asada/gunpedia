@@ -1,6 +1,7 @@
 <div *ngIf="detailData">
   <h3>タイトル：{{ detailData.title }}</h3>
   <h3>説明：{{ detailData.content }}</h3>
+  <img [src]="detailData.image" alt="" />
   <h3>データ登録日時：{{ detailData.created_at | slice: 0:16 }}</h3>
   <h3>データ更新日時：{{ detailData.updated_at | slice: 0:16 }}</h3>
   <form #data="ngForm" (ngSubmit)="updateData(data.value)">
@@ -16,10 +17,16 @@
       [(ngModel)]="detailData.content"
     ></textarea
     ><br />
+    <input
+      type="file"
+      name="image"
+      accept="image/*"
+      (change)="onChangeFileInput($event)"
+      ngModel
+    />
+    <img [src]="img2base64" alt="" />
     <button type="submit">編集を保存</button>
   </form>
-
   <input type="button" id="delete" value="削除" (click)="deleteData()" />
-
   <button (click)="backBtnClick()" type="button">戻る</button>
 </div>

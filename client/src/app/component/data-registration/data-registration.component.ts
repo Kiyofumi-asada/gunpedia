@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ListService } from 'src/app/service/list.service';
 import { HotToastService } from '@ngneat/hot-toast';
-import { TFormData } from 'src/app/types/types';
+import { TPartialGundamData } from 'src/app/types/types';
 
 @Component({
   selector: 'app-data-registration',
@@ -36,10 +36,10 @@ export class DataRegistrationComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
-  onSubmit(data: TFormData): void {
+  onSubmit(data: TPartialGundamData): void {
     data.image = data.image?.length ? this.img2base64 : null;
     const body = JSON.stringify(data);
-    this.listService.registerData(body).subscribe(
+    this.listService.registerData(body as any).subscribe(
       () => {
         this.toastService.success('データを登録しました');
         this.backBtnClick();
