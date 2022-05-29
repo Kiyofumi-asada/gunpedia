@@ -1,11 +1,14 @@
 <div *ngIf="detailData">
-  <h3>タイトル：{{ detailData.title }}</h3>
-  <h3>説明：{{ detailData.content }}</h3>
-  <img [src]="detailData.image" alt="" />
-  <h3>データ登録日時：{{ detailData.created_at | slice: 0:16 }}</h3>
-  <h3>データ更新日時：{{ detailData.updated_at | slice: 0:16 }}</h3>
-  <form #data="ngForm" (ngSubmit)="updateData(data.value)">
-    <label for="name">編集</label><br />
+  <button class="button" type="submit" (click)="onClickEdit()">
+    {{ this.isEdit ? "編集をやめる" : "編集する" }}
+  </button>
+  <div *ngIf="!this.isEdit">
+    <div>タイトル：{{ detailData.title }}</div>
+    <div>説明：{{ detailData.content }}</div>
+    <img [src]="detailData.image" alt="" />
+  </div>
+  <!-- isEdit start-->
+  <form *ngIf="this.isEdit" #data="ngForm" (ngSubmit)="updateData(data.value)">
     タイトル：<input
       type="text"
       name="title"
@@ -17,6 +20,10 @@
       [(ngModel)]="detailData.content"
     ></textarea
     ><br />
+    <img
+      [src]="this.hasEditedImg ? this.img2base64 : this.detailData.image"
+      alt=""
+    /><br />
     <input
       type="file"
       name="image"
@@ -24,9 +31,25 @@
       (change)="onChangeFileInput($event)"
       ngModel
     />
-    <img [src]="img2base64" alt="" />
-    <button type="submit">編集を保存</button>
+    <button class="button" type="submit">編集を保存</button>
   </form>
-  <input type="button" id="delete" value="削除" (click)="deleteData()" />
-  <button (click)="backBtnClick()" type="button">戻る</button>
+  <button
+    *ngIf="this.isEdit && this.showButton"
+    class="button"
+    (click)="onClickDeleteImg()"
+  >
+    画像を削除</button
+  ><br />
+  <!-- isEdit end-->
+  <div>データ登録日時：{{ detailData.created_at | slice: 0:16 }}</div>
+  <div>データ更新日時：{{ detailData.updated_at | slice: 0:16 }}</div>
+
+  <input
+    class="button"
+    type="button"
+    id="delete"
+    value="削除"
+    (click)="deleteData()"
+  />
+  <button class="button" (click)="backBtnClick()" type="button">戻る</button>
 </div>

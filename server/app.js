@@ -52,7 +52,7 @@ const data = [
 const path = '/api/index';
 
 app.get(path, function (req, res, next) {
-  // console.log('===called getListAPI===', data);
+  console.log('===called getListAPI===', data);
   res.json({ status: 200, data });
 });
 

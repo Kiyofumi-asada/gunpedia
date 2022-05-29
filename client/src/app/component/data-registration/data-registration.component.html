@@ -4,6 +4,7 @@
   内容:
   <textarea type="text" name="content" ngModel></textarea><br />
   <div class="upload">
+    <img [src]="img2base64" alt="" /><br />
     <input
       type="file"
       name="image"
@@ -11,7 +12,6 @@
       (change)="onChangeFileInput($event)"
       ngModel
     />
-    <img [src]="img2base64" alt="" />
   </div>
   <button type="submit" style="margin: 3px">データを登録</button>
   <button (click)="backBtnClick()" type="button">戻る</button>

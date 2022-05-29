@@ -4,6 +4,7 @@ import { ListService } from 'src/app/service/list.service';
 import { Location } from '@angular/common';
 import { HotToastService } from '@ngneat/hot-toast';
 import { environment } from 'src/environments/environment';
+import { TPartialGundamData } from 'src/app/types/types';
 
 @Component({
   selector: 'app-list-detail',
@@ -14,7 +15,12 @@ export class ListDetailComponent implements OnInit {
   detailData: any;
   isLocal = environment.local;
   detailId = Number(this.route.snapshot.paramMap.get('id'));
+  file = null;
   img2base64 = '';
+  isEdit = false;
+  hasOriginalImg = false;
+  hasEditedImg = false;
+  showButton = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -31,27 +37,48 @@ export class ListDetailComponent implements OnInit {
     this.listService
       .getDetailData(this.detailId)
       .then((res: any) => {
-        console.log(res.body.detailData);
         this.detailData = this.isLocal ? res.body.detailData : res.body;
+        this.showButton = this.detailData.image.length ? true : false;
       })
       .catch((err) => this.toastService.error(err));
   }
 
+  onClickEdit(): boolean {
+    return (this.isEdit = this.isEdit === false ? true : false);
+  }
+
   onChangeFileInput(event: any) {
-    let file = null;
-    let reader = new FileReader();
+    const reader = new FileReader();
     if (event.target.files.length === 0) {
       return;
     }
-    file = event.target.files[0];
+    this.file = event.target.files[0];
     reader.onload = () => {
       this.img2base64 = reader.result as string;
+      this.hasEditedImg = !!this.img2base64.length;
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(this.file as any);
   }
 
-  updateData(data: any) {
-    const body = { ...data, id: this.detailId };
+  onClickDeleteImg() {
+    this.detailData.image = '';
+    this.img2base64 = '';
+    this.file = null;
+    this.showButton = false;
+  }
+
+  updateData(data: TPartialGundamData) {
+    this.hasOriginalImg = !!this.detailData.image.length;
+    //編集後画像あり -> 編集後画像をput
+    if (this.hasEditedImg) {
+      data.image = this.img2base64;
+      //元画像あり、かつ編集後画像なし -> 元画像をput
+    } else if (this.hasOriginalImg && !this.hasEditedImg) {
+      data.image = this.detailData.image;
+    } else {
+      data.image = null;
+    }
+    const body = { ...data, id: this.detailId, image: data.image };
     this.listService.updateData(body).subscribe(
       () => {
         this.toastService.success('データ更新しました');

@@ -22,8 +22,7 @@ export class ListService {
 
   constructor(private http: HttpClient) {
     this.setAuthorization('my-auth-token');
-    console.log('###isLocal', this.isLocal);
-    console.log('###host', this.host);
+    console.log('isLocal', this.isLocal);
   }
 
   setAuthorization(token: string = ''): void {
@@ -68,7 +67,6 @@ export class ListService {
       .toPromise()
       .then((res) => {
         const resData: any = res;
-        console.log('#############', res);
         return resData;
       })
       .catch(this.errorHandler);
