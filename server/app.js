@@ -49,7 +49,7 @@ const data = [
     deleted_at: new Date(),
   },
 ];
-const path = '/api/index';
+const path = '/api/gundam';
 
 app.get(path, function (req, res, next) {
   console.log('===called getListAPI===', data);

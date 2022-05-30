@@ -82,6 +82,7 @@ export class ListDetailComponent implements OnInit {
     this.ajaxService.updateData(body).subscribe(
       () => {
         this.toastService.success('データ更新しました');
+        this.getDetailData();
       },
       () => {
         this.toastService.error('データ更新失敗!');

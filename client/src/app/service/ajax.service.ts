@@ -16,7 +16,7 @@ export class AjaxService {
   isLocal = environment.local;
   host: string = environment.host;
   apiPath = {
-    org: '/api/index',
+    org: '/api/gundam',
   } as const;
   apiUrl: string = `${this.host}${this.apiPath.org}`;
 
@@ -89,12 +89,14 @@ export class AjaxService {
   updateData(body: TPartialGundamData): Observable<ArrayBuffer> {
     return this.http.put(this.apiUrl, body, this._httpOptions);
   }
+
   /**
    * データ削除
    * @param detailId
    * @returns
    */
-  deleteData(detailId: number): Observable<TPartialGundamData> {
-    return this.http.request('DELETE', this.apiUrl, { body: { id: detailId } });
+  deleteData(detailId: number): Observable<ArrayBuffer> {
+    const detailPath = `${this.apiUrl}/${detailId}`;
+    return this.http.delete(detailPath, this._httpOptions);
   }
 }
